@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Case update</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap">
+<link rel="stylesheet" href="/providerview.css">
+<style>
+body { margin: 0; background: #f2efe8; }
+.page { max-width: 720px; margin: 0 auto; padding: 2rem 1rem calc(3rem + env(safe-area-inset-bottom)); }
+@media (max-width: 560px) { .page { padding: .75rem .75rem calc(2rem + env(safe-area-inset-bottom)); } #root { padding: 1.1rem; } }
+#root { background: #fffefb; border: 1px solid #ddd8cc; border-radius: 3px; padding: 1.75rem; }
+.err { padding: 2rem; text-align: center; font: 1rem "IBM Plex Sans", sans-serif; color: #3f4d56; }
+</style>
+</head>
+<body>
+<div class="page"><div id="root"><div class="err">Loading...</div></div></div>
+<script src="/providerview.js"></script>
+<script>
+const token = location.pathname.split("/").pop();
+fetch("/api/p/" + encodeURIComponent(token))
+  .then(async (r) => { const j = await r.json(); if (!r.ok) throw new Error(j.error || "Unavailable"); return j; })
+  .then((v) => renderProviderView(document.getElementById("root"), v))
+  .catch((e) => { document.getElementById("root").innerHTML = '<div class="err"></div>'; document.querySelector(".err").textContent = e.message; });
+</script>
+</body>
+</html>
